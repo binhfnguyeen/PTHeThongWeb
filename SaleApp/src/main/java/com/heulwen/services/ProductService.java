@@ -4,10 +4,15 @@
  */
 package com.heulwen.services;
 
+import java.util.List;
+import com.heulwen.pojo.Product;
+import java.util.Map;
+
 /**
  *
  * @author admin
  */
 public interface ProductService {
-    
+
+    public List<Product> getProducts(Map<String, String> params);
 }

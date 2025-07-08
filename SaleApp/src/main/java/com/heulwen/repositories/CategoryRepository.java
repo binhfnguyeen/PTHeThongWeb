@@ -5,12 +5,14 @@
 package com.heulwen.repositories;
 
 import com.heulwen.pojo.Category;
+import jakarta.data.repository.Repository;
 import java.util.List;
 
 /**
  *
  * @author admin
  */
+@Repository
 public interface CategoryRepository {
     List<Category> getCates();
 }

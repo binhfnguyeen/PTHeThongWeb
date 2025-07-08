@@ -5,27 +5,39 @@
 package com.heulwen.controllers;
 
 import com.heulwen.services.CategoryService;
+import com.heulwen.services.ProductService;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
  * @author admin
  */
-
 @Controller
-@Transactional
+@ControllerAdvice
 public class HomeController {
+
     @Autowired
     private CategoryService cateService;
-    
-    @RequestMapping("/")
-    public String index(Model model){
-        
+
+    @Autowired
+    private ProductService prodService;
+
+    @ModelAttribute
+    public void commonReponse(Model model) {
         model.addAttribute("categories", this.cateService.getCates());
+    }
+
+    @RequestMapping("/")
+    public String index(Model model, @RequestParam Map<String, String> params) {
+        model.addAttribute("products", this.prodService.getProducts(params));
         return "index";
     }
 }

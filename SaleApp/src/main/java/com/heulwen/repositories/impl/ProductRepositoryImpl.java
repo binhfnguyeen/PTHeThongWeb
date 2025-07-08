@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import com.heulwen.pojo.Product;
 import com.heulwen.repositories.ProductRepository;
-import jakarta.data.repository.Repository;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -18,6 +17,7 @@ import java.util.ArrayList;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
