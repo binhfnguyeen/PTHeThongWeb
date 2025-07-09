@@ -4,7 +4,15 @@
  */
 package com.heulwen.controllers;
 
+import com.heulwen.pojo.Product;
+import com.heulwen.services.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -13,9 +21,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class ProductController {
-
+    @Autowired
+    private ProductService prodService;
+    
     @RequestMapping("/products")
-    public String listProducts() {
+    public String listProducts(Model model) {
+        model.addAttribute("product", new Product());
+        return "products";
+    }
+    
+    @PostMapping("/products")
+    public String addProduct(@ModelAttribute(value = "product") Product p){
+        this.prodService.addOrUpdateProduct(p);
+        return "redirect:/";
+    }
+    
+    @GetMapping("/products/{productId}")
+    public String updateProduct(Model model, @PathVariable(value = "productId") int id ){
+        model.addAttribute("product", this.prodService.getProductById(id));
         return "products";
     }
 }

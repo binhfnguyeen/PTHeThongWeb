@@ -4,6 +4,7 @@
  */
 package com.heulwen.repositories.impl;
 
+import com.heulwen.configs.HibernateConfigs;
 import java.util.List;
 import java.util.Map;
 import com.heulwen.pojo.Product;
@@ -33,6 +34,7 @@ public class ProductRepositoryImpl implements ProductRepository{
     private LocalSessionFactoryBean factory;
     private static final int PAGE_SIZE = 6;
 
+    @Override
     public List<Product> getProducts(Map<String, String> params) {
         Session s = this.factory.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder(); // Xây dựng câu query
@@ -75,26 +77,27 @@ public class ProductRepositoryImpl implements ProductRepository{
         return query.getResultList();
     }
 
-//    public Product getProductById(int id){
-//        try (Session s = HibernateConfigs.getFACTORY().openSession()){
-//            return s.get(Product.class, id);
-//        }
-//    }
-//    
-//    public void addOrUpdateProduct(Product p){
-//        try (Session s = HibernateConfigs.getFACTORY().openSession()){
-//            if (p.getId() == null){
-//                s.persist(p);
-//            } else {
-//                s.merge(p);
-//            }
-//        }
-//    }
-//    
-//    public void deleteProduct(int id){
-//        try (Session s = HibernateConfigs.getFACTORY().openSession()){
-//            Product p = this.getProductById(id);
-//            s.remove(p);
-//        }
-//    }
+    public Product getProductById(int id){
+        try (Session s = this.factory.getObject().getCurrentSession()){
+            return s.get(Product.class, id);
+        }
+    }
+    
+    @Override
+    public void addOrUpdateProduct(Product p){
+        try (Session s = this.factory.getObject().getCurrentSession()){
+            if (p.getId() == null){
+                s.persist(p);
+            } else {
+                s.merge(p);
+            }
+        }
+    }
+    
+    public void deleteProduct(int id){
+        try (Session s = this.factory.getObject().getCurrentSession()){
+            Product p = this.getProductById(id);
+            s.remove(p);
+        }
+    }
 }
