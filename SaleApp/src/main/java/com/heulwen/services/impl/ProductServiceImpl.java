@@ -38,24 +38,22 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void addOrUpdateProduct(Product p) {
         if (!p.getFile().isEmpty()) {
-            Map res;
             try {
-                res = cloudinary.uploader().upload(p.getFile().getBytes(),
+               Map res = cloudinary.uploader().upload(p.getFile().getBytes(),
                         ObjectUtils.asMap("resource_type", "auto"));
 
                 p.setImage(res.get("secure_url").toString());
             } catch (IOException ex) {
                 Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-            p.setImage("https://res.cloudinary.com/dxxwcby8l/image/upload/v1647248652/dkeolz3ghc0eino87iec.jpg");
-        }
+        } 
+        
         this.productRepo.addOrUpdateProduct(p);
     }
 
     @Override
     public void deleteProduct(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.productRepo.deleteProduct(id);
     }
 
     @Override

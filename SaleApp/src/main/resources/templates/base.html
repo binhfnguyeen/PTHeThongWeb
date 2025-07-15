@@ -56,28 +56,6 @@
                 </div>
             </form>
         </div>
-
-        <table class="table">
-            <tr>
-                <th></th>
-                <th>Id</th>
-                <th>Tên sản phẩm</th>
-                <th>Giá sản phẩm</th>
-                <th></th>
-            </tr>
-            <tr th:each="p: ${products}">
-                <td>
-                    <img th:src="${p.image}" width="200" class="rounded" />
-                </td>
-                <td th:text="${p.id}"></td>
-                <td th:text="${p.name}"></td>
-                <td th:text="${p.price} + 'VNĐ'"></td>
-                <td>
-                    <a href="#"  class="btn btn-info">Cập nhật</a>
-                    <button class="btn btn-danger">Xóa</button>
-                </td>
-            </tr>
-        </table>
     </main>
 
     <footer th:fragment="footer">

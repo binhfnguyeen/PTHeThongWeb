@@ -26,12 +26,11 @@ public class HomeController {
 
     @Autowired
     private CategoryService cateService;
-
     @Autowired
     private ProductService prodService;
 
     @ModelAttribute
-    public void commonReponse(Model model) {
+    public void commonResponses(Model model) {
         model.addAttribute("categories", this.cateService.getCates());
     }
 
@@ -40,4 +39,5 @@ public class HomeController {
         model.addAttribute("products", this.prodService.getProducts(params));
         return "index";
     }
+
 }

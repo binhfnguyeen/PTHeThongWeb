@@ -9,27 +9,35 @@
     <nav th:replace="base :: header"></nav>
     <h1 class="text-center text-info mt-2">QUẢN LÝ SẢN PHẨM</h1>
 
-    <form th:action="@{/products}" method="post" enctype="multipart/form-data" th:object="${product}">
+    <form th:action="@{/products}" method="post" enctype="multipart/form-data" th:object="${product}" class="container">
         <div class="form-floating mb-3 mt-3">
-            <label for="name" class="form-label">Tên sản phẩm:</label>
-            <input type="text" class="form-control" id="name" placeholder="Tên sản phẩm" th:field="*{name}">
+            <input type="text" class="form-control" id="name" placeholder="Tên sản phẩm" th:field="*{name}" required />
+            <label for="name">Tên sản phẩm</label>
         </div>
         <div class="form-floating mb-3 mt-3">
-            <label for="price" class="form-label">Giá sản phẩm:</label>
-            <input type="number" class="form-control" id="price" placeholder="Giá sản phẩm" th:field="*{price}">
+            <input type="number" class="form-control" id="price" placeholder="Gía sản phẩm" th:field="*{price}" required maxlength="6" />
+            <label for="price">Gía sản phẩm</label>
         </div>
         <div class="form-floating">
             <select class="form-select" id="cate" th:field="*{categoryId}">
-                <option th:each="c: ${categories}" th:text="${c.name}" th:value="${c.id}"></option>
+                <option th:each="c: ${categories}" th:text="${c.name}" th:value="${c.id}">1</option>
             </select>
-            <label for="cate" class="form-label">Danh mục:</label>
+            <label for="sel1" class="form-label">Danh mục:</label>
         </div>
         <div class="form-floating mb-3 mt-3">
-            <label for="file" class="form-label">Chọn ảnh sản phẩm:</label>
-            <input type="file" class="form-control" id="file" th:field="*{file}">
+            <input type="file" class="form-control" id="price" th:field="*{file}" />
+        </div>
+        <div class="form-floating mb-3 mt-3" th:if="${product.image != null}">
+            <img th:src="${product.image}" width="300" />
         </div>
         <div class="form-floating mb-3 mt-3">
-            <button type="submit" class="btn btn-success">Thêm sản phẩm</button>
+            <input type="hidden" th:field="*{id}" /> 
+            <input type="hidden" th:field="*{image}" />
+
+            <button type="submit" class="btn btn-success">
+                <span th:if="${product.id == null}">Thêm sản phẩm</span>
+                <span th:if="${product.id != null}">Cập nhật sản phẩm</span>
+            </button>
         </div>
     </form>
 

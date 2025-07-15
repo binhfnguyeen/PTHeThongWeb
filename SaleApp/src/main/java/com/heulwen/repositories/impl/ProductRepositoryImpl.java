@@ -25,10 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author admin
  */
-
 @Repository
 @Transactional
-public class ProductRepositoryImpl implements ProductRepository{
+public class ProductRepositoryImpl implements ProductRepository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
@@ -37,25 +36,36 @@ public class ProductRepositoryImpl implements ProductRepository{
     @Override
     public List<Product> getProducts(Map<String, String> params) {
         Session s = this.factory.getObject().getCurrentSession();
-        CriteriaBuilder b = s.getCriteriaBuilder(); // Xây dựng câu query
+        CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<Product> q = b.createQuery(Product.class);
-        Root root = q.from(Product.class); // Bảng gốc
+        Root root = q.from(Product.class);
         q.select(root);
 
-        // Loc du lieu
         if (params != null) {
-            List<Predicate> predicates = new ArrayList<>();
+            // Loc du lieu
+            List<Predicate> predcates = new ArrayList<>();
+
             String kw = params.get("kw");
             if (kw != null && !kw.isEmpty()) {
-                predicates.add(b.like(root.get("name"), String.format("%%%s%%", kw)));
+                predcates.add(b.like(root.get("name"), String.format("%%%s%%", kw)));
             }
 
             String fromPrice = params.get("fromPrice");
             if (fromPrice != null && !fromPrice.isEmpty()) {
-                predicates.add(b.greaterThanOrEqualTo(root.get("price"), fromPrice));
+                predcates.add(b.greaterThanOrEqualTo(root.get("price"), fromPrice));
             }
 
-            q.where(predicates.toArray(Predicate[]::new));
+            String toPrice = params.get("toPrice");
+            if (toPrice != null && !toPrice.isEmpty()) {
+                predcates.add(b.lessThanOrEqualTo(root.get("price"), toPrice));
+            }
+
+            String cateId = params.get("cateId");
+            if (cateId != null && !cateId.isEmpty()) {
+                predcates.add(b.equal(root.get("category").as(Integer.class), cateId));
+            }
+
+            q.where(predcates.toArray(Predicate[]::new));
 
             // Sap xep du lieu
             q.orderBy(b.desc(root.get(params.getOrDefault("sortBy", "id"))));
@@ -63,12 +73,10 @@ public class ProductRepositoryImpl implements ProductRepository{
 
         Query query = s.createQuery(q);
 
-        // Phan trang du lieu
         if (params != null) {
             String page = params.get("page");
             if (page != null) {
-                int p = Integer.parseInt(page);
-                int start = (p - 1) * PAGE_SIZE;
+                int start = (Integer.parseInt(page) - 1) * PAGE_SIZE;
 
                 query.setFirstResult(start);
                 query.setMaxResults(PAGE_SIZE);
@@ -77,27 +85,29 @@ public class ProductRepositoryImpl implements ProductRepository{
         return query.getResultList();
     }
 
-    public Product getProductById(int id){
-        try (Session s = this.factory.getObject().getCurrentSession()){
-            return s.get(Product.class, id);
-        }
-    }
-    
     @Override
-    public void addOrUpdateProduct(Product p){
-        try (Session s = this.factory.getObject().getCurrentSession()){
-            if (p.getId() == null){
-                s.persist(p);
-            } else {
-                s.merge(p);
-            }
-        }
+    public Product getProductById(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        return s.get(Product.class, id);
+
     }
-    
-    public void deleteProduct(int id){
-        try (Session s = this.factory.getObject().getCurrentSession()){
-            Product p = this.getProductById(id);
-            s.remove(p);
+
+    @Override
+    public void addOrUpdateProduct(Product p) {
+        Session s = this.factory.getObject().getCurrentSession();
+        if (p.getId() == null) {
+            s.persist(p);
+        } else {
+            s.merge(p);
         }
+
+    }
+
+    @Override
+    public void deleteProduct(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        Product p = this.getProductById(id);
+        s.remove(p);
+
     }
 }
