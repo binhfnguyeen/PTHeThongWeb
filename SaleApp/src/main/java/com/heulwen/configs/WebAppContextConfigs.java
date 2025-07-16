@@ -4,8 +4,6 @@
  */
 package com.heulwen.configs;
 
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 import com.heulwen.formatters.CategoryFormatter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -45,17 +43,6 @@ public class WebAppContextConfigs implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addFormatter(new CategoryFormatter());
-    }
-
-    @Bean
-    public Cloudinary cloudinary() {
-        Cloudinary cloudinary
-                = new Cloudinary(ObjectUtils.asMap(
-                        "cloud_name", "dwivkhh8t",
-                        "api_key", "925656835271691",
-                        "api_secret", "xggQhqIzVzwLbOJx05apmM4Od7U",
-                        "secure", true));
-        return cloudinary;
     }
     
     @Override
